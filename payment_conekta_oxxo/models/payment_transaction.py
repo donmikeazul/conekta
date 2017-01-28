@@ -17,7 +17,9 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     _inherit = 'payment.transaction'
 
-    conekta_oxxo_barcode = fields.Binary(string='Oxxo Barcode')
+    # conekta_oxxo_barcode = fields.Binary(string='Oxxo Barcode')
+    conekta_oxxo_barcode = fields.Char(string='Oxxo Barcode')
+    conekta_oxxo_barcode_url = fields.Char(string='Oxxo Barcode URL')
     conekta_oxxo_expire_date = fields.Date(string="Oxxo expire date")
 
     @api.model
@@ -43,8 +45,9 @@ class PaymentTransaction(models.Model):
         data = {
             'acquirer_reference': data['id'],
             'state': 'pending',
-            'conekta_oxxo_barcode': base64.encodestring(
-                requests.get(data.payment_method['barcode_url']).content),
+            # 'conekta_oxxo_barcode': requests.get(data.payment_method['barcode_url']).content,
+            'conekta_oxxo_barcode': data.payment_method['barcode'],
+            'conekta_oxxo_barcode_url': data.payment_method['barcode_url'],
             'conekta_oxxo_expire_date': date,
         }
         transaction.write(data)
